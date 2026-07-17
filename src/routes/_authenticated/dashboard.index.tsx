@@ -52,12 +52,12 @@ function DashboardHome() {
   const ended = sessions.filter((s) => s.status === "ended");
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10">
+    <div className="mx-auto max-w-6xl px-6 py-10 relative">
       {/* Kumaraguru Institutions branding banner */}
-      <div className="mb-6 flex items-center justify-end">
-        <img src="/kumaraguru-logo.png" alt="Kumaraguru Institutions" className="h-12 object-contain" />
+      <div className="absolute top-6 right-6 bg-white px-4 py-2 rounded shadow-lg hidden sm:block">
+        <img src="/kumaraguru-logo.png" alt="Kumaraguru Institutions" className="h-10 object-contain" />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-12 sm:mt-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage your live classroom sessions.</p>
