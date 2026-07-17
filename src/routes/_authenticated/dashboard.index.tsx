@@ -53,18 +53,19 @@ function DashboardHome() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10 relative">
-      {/* Kumaraguru Institutions branding banner */}
-      <div className="absolute top-6 right-6 bg-white px-4 py-2 rounded shadow-lg hidden sm:block">
-        <img src="/kumaraguru-logo.png" alt="Kumaraguru Institutions" className="h-10 object-contain" />
-      </div>
-      <div className="flex items-center justify-between mt-12 sm:mt-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage your live classroom sessions.</p>
         </div>
-        <Link to="/dashboard/sessions">
-          <Button className="gradient-bg font-semibold"><Plus className="mr-2 h-4 w-4" /> New Session</Button>
-        </Link>
+        <div className="flex items-center gap-4">
+          <div className="bg-white px-3 py-1.5 rounded shadow-sm">
+            <img src="/kumaraguru-logo.png" alt="Kumaraguru Institutions" className="h-8 object-contain" />
+          </div>
+          <Link to="/dashboard/sessions">
+            <Button className="gradient-bg font-semibold"><Plus className="mr-2 h-4 w-4" /> New Session</Button>
+          </Link>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
