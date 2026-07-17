@@ -53,6 +53,10 @@ function DashboardHome() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
+      {/* Kumaraguru Institutions branding banner */}
+      <div className="mb-6 flex items-center justify-end">
+        <img src="/kumaraguru-logo.png" alt="Kumaraguru Institutions" className="h-12 object-contain" />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
