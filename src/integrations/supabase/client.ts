@@ -6,6 +6,12 @@ function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
 }
 
+// Strip any hidden Unicode/BOM characters that break HTTP headers (ISO-8859-1 only)
+function sanitizeHeaderValue(value: string): string {
+  // eslint-disable-next-line no-control-regex
+  return value.replace(/[^\x00-\xFF]/g, '').trim();
+}
+
 function createSupabaseFetch(supabaseKey: string): typeof fetch {
   return async (input, init) => {
     const headers = new Headers(
@@ -21,13 +27,13 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
       headers.delete('Authorization');
     }
 
-    headers.set('apikey', supabaseKey);
+    headers.set('apikey', sanitizeHeaderValue(supabaseKey));
 
     // Bypass PostgREST JWT decode error by sending the Firebase UID directly in a header
     try {
       const { auth } = await import('@/lib/firebase');
       if (auth.currentUser?.uid) {
-        headers.set('x-firebase-uid', auth.currentUser.uid);
+        headers.set('x-firebase-uid', sanitizeHeaderValue(auth.currentUser.uid));
       }
     } catch (e) {
       console.warn('Failed to inject x-firebase-uid:', e);
