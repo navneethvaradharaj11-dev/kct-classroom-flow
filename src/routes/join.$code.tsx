@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Activity, CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -206,8 +206,8 @@ function Wrap({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="flex items-center gap-2 px-5 py-4 border-b border-border/50">
-        <div className="grid h-8 w-8 place-items-center rounded-lg gradient-bg">
-          <Activity className="h-4 w-4 text-white" />
+        <div className="grid h-8 w-8 place-items-center rounded-lg overflow-hidden">
+          <img src="/kct-logo.png" alt="KCT Logo" className="h-8 w-8 object-cover" />
         </div>
         <span className="font-bold text-sm">KCT <span className="gradient-text">PULSE</span></span>
       </header>

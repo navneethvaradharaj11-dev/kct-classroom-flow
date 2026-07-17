@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Activity, BarChart3, Cloud, Sparkles, Users, Zap } from "lucide-react";
+import { BarChart3, Cloud, Sparkles, Users, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -23,8 +23,8 @@ function Index() {
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl gradient-bg shadow-[var(--shadow-glow)]">
-            <Activity className="h-5 w-5 text-white" />
+          <div className="grid h-9 w-9 place-items-center rounded-xl overflow-hidden shadow-[var(--shadow-glow)]">
+            <img src="/kct-logo.png" alt="KCT Logo" className="h-9 w-9 object-cover" />
           </div>
           <span className="text-lg font-bold tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
         </Link>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Activity, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -122,8 +122,8 @@ function AuthPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         <Link to="/" className="mb-8 flex items-center justify-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-xl gradient-bg shadow-[var(--shadow-glow)]">
-            <Activity className="h-5 w-5 text-white" />
+          <div className="grid h-10 w-10 place-items-center rounded-xl overflow-hidden shadow-[var(--shadow-glow)]">
+            <img src="/kct-logo.png" alt="KCT Logo" className="h-10 w-10 object-cover" />
           </div>
           <span className="text-xl font-bold">KCT <span className="gradient-text">PULSE</span></span>
         </Link>

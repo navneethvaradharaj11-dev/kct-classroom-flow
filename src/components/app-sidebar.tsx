@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Activity, BarChart3, LayoutDashboard, LogOut, PresentationIcon, Settings } from "lucide-react";
+import { BarChart3, LayoutDashboard, LogOut, PresentationIcon, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { auth } from "@/lib/firebase";
@@ -23,8 +23,8 @@ export function AppSidebar() {
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col border-r border-border/60 bg-sidebar/60 backdrop-blur-xl">
       <div className="flex h-16 items-center gap-2 px-6 border-b border-border/60">
-        <div className="grid h-8 w-8 place-items-center rounded-lg gradient-bg">
-          <Activity className="h-4 w-4 text-white" />
+        <div className="grid h-8 w-8 place-items-center rounded-lg overflow-hidden">
+          <img src="/kct-logo.png" alt="KCT Logo" className="h-8 w-8 object-cover" />
         </div>
         <span className="font-bold">KCT <span className="gradient-text">PULSE</span></span>
       </div>
