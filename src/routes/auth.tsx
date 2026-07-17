@@ -43,6 +43,7 @@ function AuthPage() {
     });
     if (error) {
       console.error("Failed to sync user profile in database:", error);
+      toast.error("Database sync failed: " + error.message);
     }
     const { data: roleExists } = await supabase.from("user_roles").select("role").eq("user_id", user.uid).maybeSingle();
     if (!roleExists) {

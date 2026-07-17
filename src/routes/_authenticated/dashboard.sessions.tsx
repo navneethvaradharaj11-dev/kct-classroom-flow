@@ -68,7 +68,8 @@ function SessionsPage() {
       setTitle("");
       navigate({ to: "/dashboard/session/$id", params: { id: inserted.id } });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to create session");
+      console.error("Create session error:", err);
+      toast.error(err instanceof Error ? err.message : (typeof err === "object" && err ? (err as any).message || JSON.stringify(err) : String(err)));
     } finally {
       setSaving(false);
     }
