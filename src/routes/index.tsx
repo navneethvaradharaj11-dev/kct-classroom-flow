@@ -20,13 +20,17 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen">
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl overflow-hidden shadow-[var(--shadow-glow)]">
-            <img src="/kct-logo.jpg" alt="KCT Logo" className="h-9 w-9 object-cover" />
+    <div 
+      className="min-h-screen bg-cover bg-center bg-fixed bg-no-repeat relative before:absolute before:inset-0 before:bg-background/85"
+      style={{ backgroundImage: "url('/kct-landing-bg.jpg')" }}
+    >
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="grid h-16 w-16 place-items-center rounded-2xl overflow-hidden shadow-[var(--shadow-glow)]">
+            <img src="/kct-logo.jpg" alt="KCT Logo" className="h-16 w-16 object-cover" />
           </div>
-          <span className="text-lg font-bold tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
+          <span className="text-2xl font-extrabold tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
         </Link>
         <div className="flex items-center gap-3">
           <Link to="/auth">
@@ -87,6 +91,7 @@ function Index() {
       <footer className="border-t border-border/50 py-8 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} KCT PULSE · Kumaraguru College of Technology
       </footer>
+      </div>
     </div>
   );
 }

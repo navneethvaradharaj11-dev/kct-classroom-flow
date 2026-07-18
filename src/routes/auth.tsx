@@ -121,14 +121,14 @@ function AuthPage() {
   return (
     <div 
       className="min-h-screen flex items-center justify-center px-4 py-10 bg-cover bg-center bg-fixed bg-no-repeat relative before:absolute before:inset-0 before:bg-background/80"
-      style={{ backgroundImage: "url('/kct-bg.jpg')" }}
+      style={{ backgroundImage: "url('/kct-bg-new.png')" }}
     >
       <div className="w-full max-w-md relative z-10">
-        <Link to="/" className="mb-8 flex items-center justify-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-xl overflow-hidden shadow-[var(--shadow-glow)]">
-            <img src="/kct-logo.jpg" alt="KCT Logo" className="h-10 w-10 object-cover" />
+        <Link to="/" className="mb-8 flex items-center justify-center gap-3">
+          <div className="grid h-16 w-16 place-items-center rounded-2xl overflow-hidden shadow-[var(--shadow-glow)]">
+            <img src="/kct-logo.jpg" alt="KCT Logo" className="h-16 w-16 object-cover" />
           </div>
-          <span className="text-xl font-bold">KCT <span className="gradient-text">PULSE</span></span>
+          <span className="text-2xl font-extrabold tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
         </Link>
 
         <div className="glass rounded-3xl p-8">

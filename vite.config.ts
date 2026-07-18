@@ -12,4 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Target Vercel for production builds — auto-detection also works but being
+  // explicit prevents surprises if building from a non-Vercel CI.
+  nitro: { preset: "vercel" },
 });

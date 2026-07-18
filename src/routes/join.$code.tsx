@@ -205,11 +205,11 @@ function JoinPage() {
 function Wrap({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="flex items-center gap-2 px-5 py-4 border-b border-border/50">
-        <div className="grid h-8 w-8 place-items-center rounded-lg overflow-hidden">
-          <img src="/kct-logo.jpg" alt="KCT Logo" className="h-8 w-8 object-cover" />
+      <header className="flex items-center gap-3 px-5 py-4 border-b border-border/50">
+        <div className="grid h-12 w-12 place-items-center rounded-xl overflow-hidden shadow-[var(--shadow-glow)]">
+          <img src="/kct-logo.jpg" alt="KCT Logo" className="h-12 w-12 object-cover" />
         </div>
-        <span className="font-bold text-sm">KCT <span className="gradient-text">PULSE</span></span>
+        <span className="font-extrabold text-lg tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
       </header>
       <main className="flex-1 px-5 py-8 flex items-start justify-center">
         <div className="w-full max-w-md">{children}</div>
