@@ -27,8 +27,8 @@ function Index() {
       <div className="relative z-10 flex flex-col min-h-screen">
         <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
         <Link to="/" className="flex items-center gap-3">
-          <div className="grid h-16 w-16 place-items-center rounded-2xl overflow-hidden shadow-[var(--shadow-glow)]">
-            <img src="/kct-logo-opt.jpg" alt="KCT Logo" className="h-16 w-16 object-cover" />
+          <div className="grid h-24 w-24 place-items-center rounded-2xl overflow-hidden shadow-[var(--shadow-glow)]">
+            <img src="/user-custom-pic-opt.jpg" alt="Custom Logo" className="h-24 w-24 object-cover" />
           </div>
           <span className="text-2xl font-extrabold tracking-tight">KCT <span className="gradient-text">PULSE</span></span>
         </Link>
