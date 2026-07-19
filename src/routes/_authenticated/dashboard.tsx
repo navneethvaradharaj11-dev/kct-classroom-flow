@@ -10,7 +10,7 @@ function DashboardLayout() {
     <div className="relative flex min-h-screen w-full overflow-hidden bg-[#020817]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeat opacity-[0.15]"
+        className="pointer-events-none absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeat opacity-[0.45]"
         style={{ backgroundImage: "url('/kct-temple-bg-opt.jpg')" }}
       />
       <div
