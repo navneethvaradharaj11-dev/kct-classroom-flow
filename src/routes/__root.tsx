@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -150,10 +150,12 @@ import { Toaster } from "@/components/ui/sonner";
 import { getStoredTheme, applyTheme } from "@/components/theme-toggle";
 import { autoDraftStaleSessions } from "@/lib/session-utils";
 import { ChatBot } from "@/components/chat-bot";
+import { Lock } from "lucide-react";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
 
   useEffect(() => {
     applyTheme(getStoredTheme());
@@ -198,29 +200,21 @@ function RootComponent() {
       }
     };
 
-    const triggerRestriction = () => {
-      document.body.innerHTML = 
-        '<div style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#030712;color:#f9fafb;font-family:sans-serif;flex-direction:column;gap:12px;padding:24px;text-align:center;">' +
-        '<h1 style="font-size:24px;font-weight:bold;">Developer Tools Restricted</h1>' +
-        '<p style="color:#9ca3af;font-size:14px;max-width:400px;">Access to browser inspect tools is disabled for session and integrity protection.</p>' +
-        '</div>';
-    };
+    // Shared check state
+    let isConsoleOpen = false;
 
     // Check window size difference (reliable for docked DevTools)
     const checkWindowSize = () => {
       const threshold = 160;
       const widthThreshold = window.outerWidth - window.innerWidth > threshold;
       const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-      
-      if (widthThreshold || heightThreshold) {
-        triggerRestriction();
-      }
+      return widthThreshold || heightThreshold;
     };
 
     // Setup RegExp toString check (works when debugger breakpoints are deactivated)
     const devtoolsRegexp = /./;
     devtoolsRegexp.toString = function () {
-      triggerRestriction();
+      isConsoleOpen = true;
       return "";
     };
 
@@ -228,41 +222,54 @@ function RootComponent() {
     const element = new Image();
     Object.defineProperty(element, "id", {
       get: () => {
-        triggerRestriction();
+        isConsoleOpen = true;
       },
     });
 
     const runChecks = () => {
-      // 1. Debugger statement check
-      const start = Date.now();
-      debugger;
-      const end = Date.now();
-      if (end - start > 100) {
-        triggerRestriction();
-      }
+      // Reset console check flag
+      isConsoleOpen = false;
 
-      // 2. Console evaluation checks (logs element/regexp to trigger getters)
+      // 1. Console evaluation checks (logs element/regexp to trigger getters)
       console.log(devtoolsRegexp);
       console.log(element);
       console.clear();
 
+      // 2. Debugger statement check
+      let isDebuggerOpen = false;
+      const start = Date.now();
+      debugger;
+      const end = Date.now();
+      if (end - start > 100) {
+        isDebuggerOpen = true;
+      }
+
       // 3. Viewport size check
-      checkWindowSize();
+      const isSizeOpen = checkWindowSize();
+
+      // Determine overall open state
+      const isOpen = isConsoleOpen || isDebuggerOpen || isSizeOpen;
+      setIsDevToolsOpen(isOpen);
     };
 
     window.addEventListener("contextmenu", handleContextMenu);
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("resize", checkWindowSize);
+    window.addEventListener("resize", () => {
+      if (checkWindowSize()) {
+        setIsDevToolsOpen(true);
+      }
+    });
     
     const interval = setInterval(runChecks, 1000);
 
     // Initial check
-    checkWindowSize();
+    if (checkWindowSize()) {
+      setIsDevToolsOpen(true);
+    }
 
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("resize", checkWindowSize);
       clearInterval(interval);
     };
   }, []);
@@ -275,6 +282,26 @@ function RootComponent() {
       <Outlet />
       <Toaster />
       {showChatBot && <ChatBot />}
+      
+      {/* Dynamic DevTools Warning Overlay */}
+      {isDevToolsOpen && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background/80 backdrop-blur-md p-6 text-center select-none animate-in fade-in duration-200">
+          <div className="glass max-w-md rounded-3xl p-8 border border-destructive/20 shadow-[0_0_50px_rgba(239,68,68,0.15)] space-y-6">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/30 flex items-center justify-center text-destructive animate-pulse">
+              <Lock className="h-8 w-8" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold tracking-tight">Developer Tools Restricted</h2>
+              <p className="text-sm text-muted-foreground">
+                Access to browser inspect tools is disabled to protect session integrity and prevent unauthorized access.
+              </p>
+            </div>
+            <div className="rounded-xl bg-muted/40 p-4 text-xs font-medium text-muted-foreground border border-border/40">
+              Please close Developer Tools (F12 / Inspect drawer) to resume using KCT PULSE.
+            </div>
+          </div>
+        </div>
+      )}
     </QueryClientProvider>
   );
 }
