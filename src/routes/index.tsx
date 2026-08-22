@@ -24,7 +24,7 @@ function Index() {
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-fixed bg-no-repeat relative"
-      style={{ backgroundImage: "url('/kct-landing-bg.jpg')" }}
+      style={{ backgroundImage: "url('/kct-landing-bgpp.jpg')" }}
     >
       <div
         aria-hidden="true"

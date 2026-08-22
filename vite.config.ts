@@ -7,6 +7,39 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("firebase")) {
+                return "firebase";
+              }
+              if (id.includes("recharts")) {
+                return "recharts";
+              }
+              if (
+                id.includes("jspdf") ||
+                id.includes("jspdf-autotable") ||
+                id.includes("html2canvas") ||
+                id.includes("xlsx")
+              ) {
+                return "reports-pdf-excel";
+              }
+              if (id.includes("mammoth") || id.includes("pdfjs-dist")) {
+                return "pdf-docx-parsers";
+              }
+              if (id.includes("lucide-react")) {
+                return "lucide-icons";
+              }
+              return "vendor";
+            }
+          },
+        },
+      },
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

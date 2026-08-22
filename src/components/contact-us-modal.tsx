@@ -18,7 +18,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { auth } from "@/lib/firebase";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Loader2, Mail, MessageSquare, Send, User } from "lucide-react";
 import { toast } from "sonner";
@@ -39,11 +38,15 @@ export function ContactUsModal({ children }: ContactUsModalProps) {
   // Prefill details if user is logged in
   useEffect(() => {
     if (open) {
-      const user = auth.currentUser;
-      if (user) {
-        if (user.displayName) setName(user.displayName);
-        if (user.email) setEmail(user.email);
-      }
+      import("@/lib/firebase").then(({ auth }) => {
+        const user = auth.currentUser;
+        if (user) {
+          if (user.displayName) setName(user.displayName);
+          if (user.email) setEmail(user.email);
+        }
+      }).catch(err => {
+        console.error("Failed to load Firebase auth dynamically:", err);
+      });
     }
   }, [open]);
 
@@ -78,6 +81,7 @@ export function ContactUsModal({ children }: ContactUsModalProps) {
 
     try {
       // 1. Save message to Supabase database
+      const { auth } = await import("@/lib/firebase");
       const firebaseUser = auth.currentUser;
       const { error: dbError } = await supabase
         .from("contact_messages")
