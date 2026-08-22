@@ -160,8 +160,13 @@ function RootComponent() {
   }, []);
 
   useEffect(() => {
-    // Only run DevTools restrictions in production
-    if (!import.meta.env.PROD) return;
+    // Allow local debugging on localhost/127.0.0.1, but block in Lovable sandbox and production
+    if (
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    ) {
+      return;
+    }
 
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
@@ -193,26 +198,71 @@ function RootComponent() {
       }
     };
 
-    const detectDevTools = () => {
+    const triggerRestriction = () => {
+      document.body.innerHTML = 
+        '<div style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#030712;color:#f9fafb;font-family:sans-serif;flex-direction:column;gap:12px;padding:24px;text-align:center;">' +
+        '<h1 style="font-size:24px;font-weight:bold;">Developer Tools Restricted</h1>' +
+        '<p style="color:#9ca3af;font-size:14px;max-width:400px;">Access to browser inspect tools is disabled for session and integrity protection.</p>' +
+        '</div>';
+    };
+
+    // Check window size difference (reliable for docked DevTools)
+    const checkWindowSize = () => {
+      const threshold = 160;
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+      
+      if (widthThreshold || heightThreshold) {
+        triggerRestriction();
+      }
+    };
+
+    // Setup RegExp toString check (works when debugger breakpoints are deactivated)
+    const devtoolsRegexp = /./;
+    devtoolsRegexp.toString = function () {
+      triggerRestriction();
+      return "";
+    };
+
+    // Setup HTML Element ID getter check (backup console check)
+    const element = new Image();
+    Object.defineProperty(element, "id", {
+      get: () => {
+        triggerRestriction();
+      },
+    });
+
+    const runChecks = () => {
+      // 1. Debugger statement check
       const start = Date.now();
       debugger;
       const end = Date.now();
       if (end - start > 100) {
-        document.body.innerHTML = 
-          '<div style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#030712;color:#f9fafb;font-family:sans-serif;flex-direction:column;gap:12px;padding:24px;text-align:center;">' +
-          '<h1 style="font-size:24px;font-weight:bold;">Developer Tools Restricted</h1>' +
-          '<p style="color:#9ca3af;font-size:14px;max-width:400px;">Access to browser inspect tools is disabled for session and exam integrity.</p>' +
-          '</div>';
+        triggerRestriction();
       }
+
+      // 2. Console evaluation checks (logs element/regexp to trigger getters)
+      console.log(devtoolsRegexp);
+      console.log(element);
+      console.clear();
+
+      // 3. Viewport size check
+      checkWindowSize();
     };
 
     window.addEventListener("contextmenu", handleContextMenu);
     window.addEventListener("keydown", handleKeyDown);
-    const interval = setInterval(detectDevTools, 1000);
+    window.addEventListener("resize", checkWindowSize);
+    
+    const interval = setInterval(runChecks, 1000);
+
+    // Initial check
+    checkWindowSize();
 
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", checkWindowSize);
       clearInterval(interval);
     };
   }, []);
