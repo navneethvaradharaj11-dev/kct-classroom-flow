@@ -198,12 +198,80 @@ function RootComponent() {
       }
     };
 
+    const triggerRestriction = () => {
+      // Completely wipe the DOM and display the MYCAMU-style clean message
+      document.body.innerHTML = `
+        <div style="display:flex; min-height:100vh; flex-direction:column; align-items:center; justify-content:center; background:#ffffff; color:#111827; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align:center; padding:48px; box-sizing:border-box;">
+          <h1 style="font-size:32px; font-weight:600; margin:0 0 12px 0; color:#1f2937; letter-spacing:-0.025em;">Developer tools are not allowed on this page.</h1>
+          <p style="font-size:16px; color:#4b5563; margin:0;">Please close Developer Tools and refresh the page.</p>
+        </div>
+      `;
+      
+      // Stop all intervals and listeners to freeze execution in this safe state
+      clearInterval(interval);
+      window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", checkWindowSize);
+    };
+
+    // Check window size difference (reliable for docked DevTools)
+    const checkWindowSize = () => {
+      const threshold = 160;
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+      
+      if (widthThreshold || heightThreshold) {
+        triggerRestriction();
+      }
+    };
+
+    // Setup RegExp toString check (works when debugger breakpoints are deactivated)
+    const devtoolsRegexp = /./;
+    devtoolsRegexp.toString = function () {
+      triggerRestriction();
+      return "";
+    };
+
+    // Setup HTML Element ID getter check (backup console check)
+    const element = new Image();
+    Object.defineProperty(element, "id", {
+      get: () => {
+        triggerRestriction();
+      },
+    });
+
+    const runChecks = () => {
+      // 1. Debugger timing check
+      const start = Date.now();
+      debugger;
+      const end = Date.now();
+      if (end - start > 100) {
+        triggerRestriction();
+      }
+
+      // 2. Console evaluation checks (logs element/regexp to trigger getters)
+      console.log(devtoolsRegexp);
+      console.log(element);
+      console.clear();
+
+      // 3. Viewport size check
+      checkWindowSize();
+    };
+
     window.addEventListener("contextmenu", handleContextMenu);
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", checkWindowSize);
+    
+    const interval = setInterval(runChecks, 1000);
+
+    // Initial check
+    checkWindowSize();
 
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", checkWindowSize);
+      clearInterval(interval);
     };
   }, []);
 
