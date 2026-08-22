@@ -159,6 +159,64 @@ function RootComponent() {
     applyTheme(getStoredTheme());
   }, []);
 
+  useEffect(() => {
+    // Only run DevTools restrictions in production
+    if (!import.meta.env.PROD) return;
+
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+      const key = e.key.toLowerCase();
+
+      if (e.key === "F12") {
+        e.preventDefault();
+        return false;
+      }
+      if (isCmdOrCtrl && e.shiftKey && key === "i") {
+        e.preventDefault();
+        return false;
+      }
+      if (isCmdOrCtrl && e.shiftKey && key === "j") {
+        e.preventDefault();
+        return false;
+      }
+      if (isCmdOrCtrl && e.shiftKey && key === "c") {
+        e.preventDefault();
+        return false;
+      }
+      if (isCmdOrCtrl && key === "u") {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    const detectDevTools = () => {
+      const start = Date.now();
+      debugger;
+      const end = Date.now();
+      if (end - start > 100) {
+        document.body.innerHTML = 
+          '<div style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#030712;color:#f9fafb;font-family:sans-serif;flex-direction:column;gap:12px;padding:24px;text-align:center;">' +
+          '<h1 style="font-size:24px;font-weight:bold;">Developer Tools Restricted</h1>' +
+          '<p style="color:#9ca3af;font-size:14px;max-width:400px;">Access to browser inspect tools is disabled for session and exam integrity.</p>' +
+          '</div>';
+      }
+    };
+
+    window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("keydown", handleKeyDown);
+    const interval = setInterval(detectDevTools, 1000);
+
+    return () => {
+      window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("keydown", handleKeyDown);
+      clearInterval(interval);
+    };
+  }, []);
+
   const showChatBot = pathname.startsWith("/dashboard");
 
   return (
